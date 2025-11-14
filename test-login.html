@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Login</title>
+</head>
+<body>
+    <h2>Login Test</h2>
+    <p>Use these credentials:</p>
+    <ul>
+        <li><strong>Email:</strong> test@test.com</li>
+        <li><strong>Password:</strong> 123456</li>
+    </ul>
+    <p>Or:</p>
+    <ul>
+        <li><strong>Email:</strong> admin@lifelink.com</li>
+        <li><strong>Password:</strong> admin123</li>
+    </ul>
+    
+    <script>
+        // Test the mock auth function
+        const mockAuth = {
+            signin(email, password) {
+                console.log('Login attempt:', { email, password });
+                
+                const users = [
+                    { id: 1, email: 'admin@lifelink.com', password: 'admin123', name: 'Admin User', role: 'admin' },
+                    { id: 2, email: 'donor@lifelink.com', password: 'donor123', name: 'John Donor', role: 'donor' },
+                    { id: 3, email: 'test@test.com', password: '123456', name: 'Test User', role: 'donor' }
+                ];
+                
+                const user = users.find(u => u.email === email && u.password === password);
+                console.log('Found user:', user);
+                
+                if (!user) {
+                    throw new Error('Invalid email or password');
+                }
+                
+                return {
+                    access_token: `mock_token_${user.id}`,
+                    user: {
+                        id: user.id,
+                        email: user.email,
+                        name: user.name,
+                        role: user.role
+                    }
+                };
+            }
+        };
+        
+        // Test login
+        try {
+            const result = mockAuth.signin('test@test.com', '123456');
+            console.log('Login successful:', result);
+            document.body.innerHTML += '<p style="color: green;">✅ Login test PASSED</p>';
+        } catch (error) {
+            console.error('Login failed:', error);
+            document.body.innerHTML += '<p style="color: red;">❌ Login test FAILED: ' + error.message + '</p>';
+        }
+    </script>
+</body>
+</html>
