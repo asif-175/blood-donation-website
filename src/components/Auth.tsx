@@ -7,6 +7,7 @@ import { Label } from './ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { motion } from 'framer-motion';
 import { supabaseService } from '../services/supabaseService';
+import { localAuthService } from '../services/localAuthService';
 
 
 
@@ -168,11 +169,20 @@ export function Auth({ onLogin, language }: AuthProps) {
           return;
         }
         
-        // Login with Supabase
-        const { user } = await supabaseService.signIn(formData.email, formData.password);
+        // Login with Supabase or localStorage fallback
+        let user, profile;
+        try {
+          const result = await supabaseService.signIn(formData.email, formData.password);
+          user = result.user;
+          profile = await supabaseService.getProfile(user.id);
+        } catch (supabaseError) {
+          console.log('Supabase failed, using localStorage:', supabaseError);
+          const result = await localAuthService.signIn(formData.email, formData.password);
+          user = result.user;
+          profile = user;
+        }
         
         if (user) {
-          const profile = await supabaseService.getProfile(user.id);
           const userData = {
             id: user.id,
             name: profile?.name || user.email?.split('@')[0] || 'User',
@@ -185,12 +195,21 @@ export function Auth({ onLogin, language }: AuthProps) {
           navigate('/register');
         }
       } else {
-        // Signup with Supabase
-        await supabaseService.signUp(formData.email, formData.password, {
-          name: formData.name,
-          phone: formData.phone,
-          city: formData.city
-        });
+        // Signup with Supabase or localStorage fallback
+        try {
+          await supabaseService.signUp(formData.email, formData.password, {
+            name: formData.name,
+            phone: formData.phone,
+            city: formData.city
+          });
+        } catch (supabaseError) {
+          console.log('Supabase failed, using localStorage:', supabaseError);
+          await localAuthService.signUp(formData.email, formData.password, {
+            name: formData.name,
+            phone: formData.phone,
+            city: formData.city
+          });
+        }
         
         setSignupSuccess(true);
       }
