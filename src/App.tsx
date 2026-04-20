@@ -227,9 +227,9 @@ function AppContent() {
   const navItems = getNavItems();
 
   return (
-    <div className="min-h-screen bg-gray-50 max-w-screen overflow-x-hidden">
+    <div className="min-h-screen bg-gray-50 w-full overflow-x-hidden">
         {/* Navigation */}
-        <nav className="bg-white shadow-lg sticky top-0 z-50">
+        <nav className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50 w-full">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
               {/* Logo */}
@@ -552,28 +552,30 @@ function MobileNavLink({ to, children, icon: Icon, onClick }) {
   );
 }
 
-// Sticky Emergency Button - shows on every page except /auth and /
+// Emergency Button - fixed to top-right corner of the navbar area
 function StickyEmergencyButton() {
   const location = useLocation();
   const hideOn = ['/', '/auth'];
   if (hideOn.includes(location.pathname)) return null;
 
   return (
-    <Link
-      to="/request"
-      className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold px-5 py-3 rounded-full shadow-2xl transition-all duration-200 hover:scale-105 active:scale-95"
-      style={{ boxShadow: '0 0 0 0 rgba(220,38,38,1)', animation: 'emergencyPulse 2s infinite' }}
-    >
-      <span className="text-lg">🚨</span>
-      <span className="text-sm">Need Blood?</span>
+    <>
       <style>{`
         @keyframes emergencyPulse {
           0%   { box-shadow: 0 0 0 0 rgba(220,38,38,0.7); }
-          70%  { box-shadow: 0 0 0 12px rgba(220,38,38,0); }
+          70%  { box-shadow: 0 0 0 10px rgba(220,38,38,0); }
           100% { box-shadow: 0 0 0 0 rgba(220,38,38,0); }
         }
       `}</style>
-    </Link>
+      <Link
+        to="/request"
+        className="fixed top-3 right-4 z-[100] flex items-center gap-1.5 bg-red-600 hover:bg-red-700 text-white font-bold px-3 py-1.5 rounded-full shadow-lg text-xs transition-colors duration-200"
+        style={{ animation: 'emergencyPulse 2s infinite' }}
+      >
+        <span>🚨</span>
+        <span>Need Blood?</span>
+      </Link>
+    </>
   );
 }
 
