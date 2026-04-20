@@ -155,12 +155,14 @@ export function Auth({ onLogin, language }: AuthProps) {
     
     try {
       if (isLogin) {
-        // Check for admin credentials first
-        if (formData.email === 'pathanasifkhan973@gmail.com' && formData.password === '@Ak1705') {
+        // Check for admin credentials from env
+        const adminEmail = import.meta.env.VITE_ADMIN_EMAIL;
+        const adminPassword = import.meta.env.VITE_ADMIN_PASSWORD;
+        if (adminEmail && adminPassword && formData.email === adminEmail && formData.password === adminPassword) {
           const adminUser = {
             id: 'admin_001',
             name: 'Admin',
-            email: 'pathanasifkhan973@gmail.com',
+            email: adminEmail,
             role: 'admin',
             isAdmin: true
           };
