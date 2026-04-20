@@ -803,11 +803,29 @@ export function RequestHelpPage({ language, user }: RequestHelpPageProps) {
                           <Clock className="h-3 w-3 mr-1" />
                           <span>{new Date(request.createdAt).toLocaleDateString()}</span>
                         </div>
+                        {/* Phone number visible */}
+                        <div className="flex items-center text-gray-700 text-sm font-medium mb-3">
+                          <Phone className="h-3 w-3 mr-1 text-red-500" />
+                          <span>{request.phone}</span>
+                        </div>
                         <div className="flex space-x-2">
-                          <Button size="sm" className="bg-red-600 hover:bg-red-700 flex-1">
-                            <Phone className="h-3 w-3 mr-1" />
-                            {t.contact}
-                          </Button>
+                          <a href={`tel:${request.phone}`} className="flex-1">
+                            <Button size="sm" className="bg-red-600 hover:bg-red-700 w-full">
+                              <Phone className="h-3 w-3 mr-1" />
+                              Call
+                            </Button>
+                          </a>
+                          <a
+                            href={`https://wa.me/91${request.phone}?text=${encodeURIComponent(`🚨 Blood Required!\nPatient: ${request.patientName}\nBlood Group: ${request.bloodGroup}\nHospital: ${request.hospital}, ${request.city}\nUrgency: ${request.urgencyLevel?.toUpperCase()}\nContact: ${request.phone}`)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex-1"
+                          >
+                            <Button size="sm" className="bg-green-600 hover:bg-green-700 w-full">
+                              <span className="mr-1">📲</span>
+                              WhatsApp
+                            </Button>
+                          </a>
                         </div>
                       </div>
                     ))}

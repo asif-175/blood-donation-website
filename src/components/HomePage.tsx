@@ -179,12 +179,30 @@ export function HomePage({ language, user }: HomePageProps) {
                     <Droplets className="h-4 w-4 mr-1" />
                     {req.unitsNeeded} unit(s) needed
                   </div>
-                  <a href={`tel:${req.phone}`}>
-                    <Button className="w-full bg-red-600 hover:bg-red-700">
-                      <Phone className="h-4 w-4 mr-2" />
-                      Call Now
-                    </Button>
-                  </a>
+                  {/* Phone number visible */}
+                  {req.phone && (
+                    <div className="flex items-center text-gray-700 text-sm font-medium mb-3">
+                      <Phone className="h-4 w-4 mr-1 text-red-500" />
+                      <span>{req.phone}</span>
+                    </div>
+                  )}
+                  <div className="flex gap-2">
+                    <a href={`tel:${req.phone}`} className="flex-1">
+                      <Button className="w-full bg-red-600 hover:bg-red-700">
+                        <Phone className="h-4 w-4 mr-2" />
+                        Call Now
+                      </Button>
+                    </a>
+                    <a
+                      href={`https://wa.me/91${req.phone}?text=${encodeURIComponent(`🚨 Blood Required!\nPatient: ${req.patientName}\nBlood Group: ${req.bloodGroup}\nHospital: ${req.hospital}, ${req.city}\nUrgency: ${req.urgencyLevel?.toUpperCase()}\nContact: ${req.phone}`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Button className="bg-green-600 hover:bg-green-700 px-3">
+                        📲
+                      </Button>
+                    </a>
+                  </div>
                 </motion.div>
               ))}
             </div>
