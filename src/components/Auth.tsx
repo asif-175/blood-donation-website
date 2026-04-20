@@ -417,6 +417,32 @@ export function Auth({ onLogin, language }: AuthProps) {
                   {errors.password && (
                     <p className="text-red-500 text-sm mt-1">{errors.password}</p>
                   )}
+                  {/* Change 8: Forgot Password link - only on login */}
+                  {isLogin && (
+                    <div className="text-right mt-1">
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          if (!formData.email) {
+                            setErrors((prev: any) => ({ ...prev, email: 'Please enter your email first' }));
+                            return;
+                          }
+                          try {
+                            const { supabase } = await import('../utils/supabase/client');
+                            await supabase.auth.resetPasswordForEmail(formData.email, {
+                              redirectTo: window.location.origin + '/auth'
+                            });
+                            alert(`Password reset email sent to ${formData.email}. Please check your inbox.`);
+                          } catch (err) {
+                            alert('Could not send reset email. Please try again.');
+                          }
+                        }}
+                        className="text-xs text-red-600 hover:text-red-700 hover:underline"
+                      >
+                        Forgot Password?
+                      </button>
+                    </div>
+                  )}
                 </div>
 
 
