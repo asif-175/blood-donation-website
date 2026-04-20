@@ -227,7 +227,7 @@ function AppContent() {
   const navItems = getNavItems();
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 max-w-screen overflow-x-hidden">
         {/* Navigation */}
         <nav className="bg-white shadow-lg sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

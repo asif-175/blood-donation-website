@@ -38,7 +38,7 @@ export function HomePage({ language, user }: HomePageProps) {
     <div className="min-h-screen bg-white">
 
       {/* ── HERO ── */}
-      <section className="bg-gradient-to-br from-red-600 to-red-800 text-white py-16 px-4">
+      <section className="bg-gradient-to-br from-red-600 to-red-800 text-white py-12 px-4">
         <div className="max-w-5xl mx-auto text-center">
           {user && (
             <p className="text-red-200 text-lg mb-2">
@@ -76,10 +76,10 @@ export function HomePage({ language, user }: HomePageProps) {
       </section>
 
       {/* ── HOW IT WORKS ── */}
-      <section className="py-16 px-4 bg-gray-50">
+      <section className="py-10 px-4 bg-gray-50">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-4">How LifeLink Works</h2>
-          <p className="text-center text-gray-500 mb-12">Simple steps — for donors and patients both</p>
+          <h2 className="text-2xl font-bold text-center text-gray-900 mb-2">How LifeLink Works</h2>
+          <p className="text-center text-gray-500 mb-8 text-sm">Simple steps — for donors and patients both</p>
 
           <div className="grid md:grid-cols-2 gap-8">
             {/* FOR DONORS */}
@@ -147,13 +147,13 @@ export function HomePage({ language, user }: HomePageProps) {
 
       {/* ── LIVE URGENT REQUESTS ── */}
       {urgentRequests.length > 0 && (
-        <section className="py-16 px-4 bg-red-50">
+        <section className="py-10 px-4 bg-red-50">
           <div className="max-w-5xl mx-auto">
             <div className="flex items-center justify-center mb-2">
               <span className="h-3 w-3 bg-red-500 rounded-full animate-ping mr-2"></span>
-              <h2 className="text-3xl font-bold text-gray-900">Live Blood Requests</h2>
+              <h2 className="text-2xl font-bold text-gray-900">Live Blood Requests</h2>
             </div>
-            <p className="text-center text-gray-500 mb-10">These people need blood right now — can you help?</p>
+            <p className="text-center text-gray-500 mb-6 text-sm">These people need blood right now — can you help?</p>
 
             <div className="grid md:grid-cols-3 gap-6">
               {urgentRequests.map((req: any, i: number) => (
@@ -201,9 +201,9 @@ export function HomePage({ language, user }: HomePageProps) {
       )}
 
       {/* ── STATS ── */}
-      <section className="py-16 px-4 bg-white">
+      <section className="py-10 px-4 bg-white">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">Our Community Impact</h2>
+          <h2 className="text-2xl font-bold text-center text-gray-900 mb-8">Our Community Impact</h2>
           <div className="grid grid-cols-3 gap-6 text-center">
             {[
               { value: stats.donors, label: 'Registered Donors', icon: Users, color: 'text-blue-600' },
@@ -227,10 +227,10 @@ export function HomePage({ language, user }: HomePageProps) {
       </section>
 
       {/* ── WHY DONATE ── */}
-      <section className="py-16 px-4 bg-gray-50">
+      <section className="py-10 px-4 bg-gray-50">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-4">Why Donate Blood?</h2>
-          <p className="text-center text-gray-500 mb-12">Every drop counts. Here's why your donation matters.</p>
+          <h2 className="text-2xl font-bold text-center text-gray-900 mb-2">Why Donate Blood?</h2>
+          <p className="text-center text-gray-500 mb-8 text-sm">Every drop counts. Here's why your donation matters.</p>
 
           <div className="grid md:grid-cols-3 gap-6">
             {[
@@ -290,10 +290,10 @@ export function HomePage({ language, user }: HomePageProps) {
       </section>
 
       {/* ── BLOOD GROUP COMPATIBILITY ── */}
-      <section className="py-16 px-4 bg-white">
+      <section className="py-10 px-4 bg-white">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-4">Blood Group Compatibility</h2>
-          <p className="text-center text-gray-500 mb-10">Know who you can donate to and receive from</p>
+          <h2 className="text-2xl font-bold text-center text-gray-900 mb-2">Blood Group Compatibility</h2>
+          <p className="text-center text-gray-500 mb-6 text-sm">Know who you can donate to and receive from</p>
 
           <div className="overflow-x-auto">
             <table className="w-full text-center border-collapse">
@@ -328,11 +328,11 @@ export function HomePage({ language, user }: HomePageProps) {
       </section>
 
       {/* ── FINAL CTA ── */}
-      <section className="py-20 px-4 bg-gradient-to-br from-red-600 to-red-800 text-white text-center">
+      <section className="py-12 px-4 bg-gradient-to-br from-red-600 to-red-800 text-white text-center">
         <div className="max-w-3xl mx-auto">
-          <Heart className="h-16 w-16 mx-auto mb-6 animate-pulse" />
-          <h2 className="text-4xl font-extrabold mb-4">Be Someone's Hero Today</h2>
-          <p className="text-xl text-red-100 mb-10">
+          <Heart className="h-12 w-12 mx-auto mb-4 animate-pulse" />
+          <h2 className="text-3xl font-extrabold mb-3">Be Someone's Hero Today</h2>
+          <p className="text-lg text-red-100 mb-8">
             It costs you nothing but 30 minutes. It means everything to someone fighting for their life.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

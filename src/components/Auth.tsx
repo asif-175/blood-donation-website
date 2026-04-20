@@ -280,45 +280,45 @@ export function Auth({ onLogin, language }: AuthProps) {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-white py-12 px-4">
-      <div className="max-w-md w-full">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-white py-8 px-4">
+      <div className="w-full max-w-md">
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.5 }}
         >
           {/* Header */}
-          <div className="text-center mb-8">
+          <div className="text-center mb-6">
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, type: "spring" }}
-              className="flex items-center justify-center mb-4"
+              className="flex items-center justify-center mb-3"
             >
-              <Heart className="h-12 w-12 text-red-500" />
+              <Heart className="h-10 w-10 text-red-500" />
             </motion.div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-2xl font-bold text-gray-900 mb-1">
               {isLogin ? t.loginTitle : t.signupTitle}
             </h1>
-            <p className="text-gray-600">
+            <p className="text-sm text-gray-500">
               {isLogin ? t.loginSubtitle : t.signupSubtitle}
             </p>
           </div>
 
           {/* Auth Card */}
-          <Card className="border-red-100">
-            <CardHeader>
-              <CardTitle className="text-center text-2xl">
+          <Card className="border border-gray-200 shadow-md">
+            <CardHeader className="pb-2 pt-5 px-6">
+              <CardTitle className="text-center text-xl">
                 {isLogin ? t.login : t.signup}
               </CardTitle>
               {!isLogin && (
-                <p className="text-center text-sm text-gray-600 mt-2">
+                <p className="text-center text-xs text-gray-500 mt-1">
                   Step 1: Create your account to get started
                 </p>
               )}
             </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
+            <CardContent className="px-6 pb-6">
+              <form onSubmit={handleSubmit} className="space-y-4">
                 {!isLogin && (
                   <>
                     <div>
