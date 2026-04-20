@@ -244,7 +244,11 @@ function AppContent() {
               </div>
 
               {/* Right side buttons */}
-              <div className="hidden md:flex items-center space-x-4">
+              <div className="hidden md:flex items-center space-x-3">
+
+                {/* Need Blood button - always visible in navbar */}
+                <EmergencyNavButton />
+
                 <div className="relative" ref={languageMenuRef}>
                   <Button
                     variant="ghost"
@@ -412,9 +416,6 @@ function AppContent() {
           <RealtimeNotifications user={user} donor={donor} />
         )}
 
-        {/* Sticky Emergency Button - visible on all pages except auth */}
-        <StickyEmergencyButton />
-
         {/* Main Content — 3 column layout on large screens */}
         <div className="flex gap-4 px-2 py-4 max-w-screen-2xl mx-auto w-full">
           <LeftSidebar />
@@ -551,24 +552,23 @@ function MobileNavLink({ to, children, icon: Icon, onClick }) {
   );
 }
 
-// Emergency Button - fixed to top-right corner of the navbar area
-function StickyEmergencyButton() {
+// Emergency Button - sits inside the navbar top-right, compact, never stretches
+function EmergencyNavButton() {
   const location = useLocation();
-  const hideOn = ['/', '/auth'];
-  if (hideOn.includes(location.pathname)) return null;
+  if (location.pathname === '/' || location.pathname === '/auth') return null;
 
   return (
     <>
       <style>{`
         @keyframes emergencyPulse {
-          0%   { box-shadow: 0 0 0 0 rgba(220,38,38,0.7); }
-          70%  { box-shadow: 0 0 0 10px rgba(220,38,38,0); }
+          0%   { box-shadow: 0 0 0 0 rgba(220,38,38,0.6); }
+          70%  { box-shadow: 0 0 0 8px rgba(220,38,38,0); }
           100% { box-shadow: 0 0 0 0 rgba(220,38,38,0); }
         }
       `}</style>
       <Link
         to="/request"
-        className="fixed top-3 right-4 z-[100] flex items-center gap-1.5 bg-red-600 hover:bg-red-700 text-white font-bold px-3 py-1.5 rounded-full shadow-lg text-xs transition-colors duration-200"
+        className="inline-flex items-center gap-1.5 bg-red-600 hover:bg-red-700 text-white font-bold px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition-colors duration-200 shrink-0"
         style={{ animation: 'emergencyPulse 2s infinite' }}
       >
         <span>🚨</span>
