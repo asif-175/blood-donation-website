@@ -18,7 +18,7 @@ interface AuthProps {
 }
 
 export function Auth({ onLogin, language }: AuthProps) {
-  const [isLogin, setIsLogin] = useState(false); // Start with signup
+  const [isLogin, setIsLogin] = useState(true); // Default to Login
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [signupSuccess, setSignupSuccess] = useState(false);
