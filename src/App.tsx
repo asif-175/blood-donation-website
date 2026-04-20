@@ -416,6 +416,9 @@ function AppContent() {
           <RealtimeNotifications user={user} donor={donor} />
         )}
 
+        {/* Sticky Emergency Button - visible on all pages except auth */}
+        <StickyEmergencyButton />
+
         {/* Main Content */}
         <main>
           <Routes>
@@ -545,6 +548,31 @@ function MobileNavLink({ to, children, icon: Icon, onClick }) {
     >
       <Icon className="h-5 w-5" />
       <span>{children}</span>
+    </Link>
+  );
+}
+
+// Sticky Emergency Button - shows on every page except /auth and /
+function StickyEmergencyButton() {
+  const location = useLocation();
+  const hideOn = ['/', '/auth'];
+  if (hideOn.includes(location.pathname)) return null;
+
+  return (
+    <Link
+      to="/request"
+      className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold px-5 py-3 rounded-full shadow-2xl transition-all duration-200 hover:scale-105 active:scale-95"
+      style={{ boxShadow: '0 0 0 0 rgba(220,38,38,1)', animation: 'emergencyPulse 2s infinite' }}
+    >
+      <span className="text-lg">🚨</span>
+      <span className="text-sm">Need Blood?</span>
+      <style>{`
+        @keyframes emergencyPulse {
+          0%   { box-shadow: 0 0 0 0 rgba(220,38,38,0.7); }
+          70%  { box-shadow: 0 0 0 12px rgba(220,38,38,0); }
+          100% { box-shadow: 0 0 0 0 rgba(220,38,38,0); }
+        }
+      `}</style>
     </Link>
   );
 }
