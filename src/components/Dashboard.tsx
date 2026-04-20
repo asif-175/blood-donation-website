@@ -341,6 +341,55 @@ export function Dashboard({ user, language }: DashboardProps) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
+
+            {/* Change 7: Complete Profile Prompt for new users */}
+            {!dashboardData.donorProfile && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                <div className="bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl p-6">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <h3 className="text-lg font-bold mb-1">👋 Welcome, {user.name}!</h3>
+                      <p className="text-red-100 text-sm mb-4">
+                        Complete your donor profile to start saving lives and receive emergency blood alerts near you.
+                      </p>
+                      <div className="flex flex-col sm:flex-row gap-3">
+                        <Button
+                          onClick={() => navigate('/register')}
+                          className="bg-white text-red-600 hover:bg-red-50 font-bold"
+                        >
+                          ❤️ Register as Donor
+                        </Button>
+                        <Button
+                          onClick={() => navigate('/request')}
+                          variant="outline"
+                          className="border-white text-white hover:bg-white hover:text-red-600"
+                        >
+                          🚨 Request Blood
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-4 grid grid-cols-3 gap-3 text-center text-xs">
+                    <div className="bg-white/20 rounded-lg p-2">
+                      <div className="font-bold text-lg">Step 1</div>
+                      <div className="text-red-100">Fill your details</div>
+                    </div>
+                    <div className="bg-white/20 rounded-lg p-2">
+                      <div className="font-bold text-lg">Step 2</div>
+                      <div className="text-red-100">Get alerts</div>
+                    </div>
+                    <div className="bg-white/20 rounded-lg p-2">
+                      <div className="font-bold text-lg">Step 3</div>
+                      <div className="text-red-100">Save lives</div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
             {/* Accepted Requests */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
