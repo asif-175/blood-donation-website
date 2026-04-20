@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
-import { Heart, Menu, X, Globe, User, LogOut, Home, UserPlus, Phone, Users, Info, Mail, BarChart3, ChevronDown, Edit, MessageSquare, Bell } from 'lucide-react';
+import { Heart, Menu, X, Globe, User, LogOut, Home, Phone, Users, BarChart3, ChevronDown, Edit, MessageSquare, Bell } from 'lucide-react';
 import { Button } from './components/ui/button';
 import { HomePage } from './components/HomePage';
 import { RegisterPage } from './components/RegisterPage';
@@ -203,21 +203,19 @@ function AppContent() {
         { path: '/admin', label: t.admin, icon: BarChart3 },
       ];
     }
-    
+
     const items = [
-      { path: '/home', label: t.home, icon: Home },
-      { path: '/register', label: t.register, icon: UserPlus },
-      { path: '/request', label: t.request, icon: Phone },
-      { path: '/donors', label: t.donors, icon: Users },
-      { path: '/about', label: t.about, icon: Info },
-      { path: '/contact', label: t.contact, icon: Mail },
+      { path: '/home',    label: t.home,    icon: Home },
+      { path: '/register', label: language === 'hi' ? 'दाता बनें' : 'Donate Blood', icon: Heart },
+      { path: '/request', label: language === 'hi' ? 'रक्त चाहिए' : 'Need Blood',   icon: Phone },
+      { path: '/donors',  label: language === 'hi' ? 'दाता खोजें' : 'Find Donors',  icon: Users },
     ];
-    
+
     if (user) {
       items.push({ path: '/dashboard', label: t.dashboard, icon: BarChart3 });
       items.push({ path: '/alerts', label: '', icon: Bell, iconOnly: true });
     }
-    
+
     return items;
   };
 
