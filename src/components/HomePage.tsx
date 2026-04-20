@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Phone, Users, MapPin, Clock, Award, Shield, Bell } from 'lucide-react';
+import { Heart, Phone, Users, MapPin, Clock, Shield, Bell, CheckCircle, AlertTriangle, Droplets } from 'lucide-react';
 import { Button } from './ui/button';
-import { Card, CardContent } from './ui/card';
-import { Badge } from './ui/badge';
 import { motion } from 'framer-motion';
-import { mockData } from '../utils/mockData';
-import { translations, getWelcomeMessage } from '../utils/translations';
 
 interface HomePageProps {
   language: string;
@@ -14,450 +10,348 @@ interface HomePageProps {
 }
 
 export function HomePage({ language, user }: HomePageProps) {
-  const [stats, setStats] = useState({
-    totalDonors: 0,
-    bloodUnitsCollected: 0,
-    livesImpacted: 0,
-    emergencyRequests: 0
-  });
   const [urgentRequests, setUrgentRequests] = useState<any[]>([]);
-  const [successStories, setSuccessStories] = useState<any[]>([]);
+  const [stats, setStats] = useState({ donors: 0, requests: 0, lives: 0 });
 
   useEffect(() => {
-    fetchStats();
-    fetchUrgentRequests();
-    fetchSuccessStories();
+    const requests = JSON.parse(localStorage.getItem('bloodRequests') || '[]');
+    const donors = JSON.parse(localStorage.getItem('donors') || '[]');
+    const recent = requests
+      .filter((r: any) => r.status === 'active')
+      .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .slice(0, 3);
+    setUrgentRequests(recent);
+    setStats({
+      donors: donors.length,
+      requests: requests.length,
+      lives: donors.length * 3
+    });
   }, []);
 
-  const fetchStats = async () => {
-    try {
-      setStats(mockData.stats);
-    } catch (error) {
-      console.error('Error fetching stats:', error);
-    }
+  const urgencyColor = (level: string) => {
+    if (level === 'critical') return 'bg-red-600';
+    if (level === 'high') return 'bg-orange-500';
+    return 'bg-yellow-500';
   };
-
-  const fetchUrgentRequests = async () => {
-    try {
-      setUrgentRequests(mockData.urgentRequests.slice(0, 3));
-    } catch (error) {
-      console.error('Error fetching urgent requests:', error);
-    }
-  };
-
-  const fetchSuccessStories = async () => {
-    try {
-      setSuccessStories(mockData.successStories.slice(0, 3));
-    } catch (error) {
-      console.error('Error fetching success stories:', error);
-    }
-  };
-
-  const translations = {
-    en: {
-      hero: {
-        title: "Save Lives Together",
-        subtitle: "Donate Blood, Help in Emergencies",
-        description: "Join our community of life-savers. Your blood donation can save up to 3 lives. Be the hero someone needs today.",
-        donateBtn: "Donate Blood Now",
-        requestBtn: "Request Emergency Help",
-        emergencyBtn: "🚨 Emergency Alert"
-      },
-      mission: {
-        title: "Our Mission",
-        description: "To create a seamless platform connecting blood donors, recipients, and hospitals for immediate emergency blood assistance.",
-        values: [
-          { title: "Fast Response", desc: "Emergency blood requests processed within minutes", icon: Clock },
-          { title: "Verified Donors", desc: "All donors are verified with medical screening", icon: Shield },
-          { title: "Community Impact", desc: "Building a network of life-savers across communities", icon: Users },
-          { title: "24/7 Support", desc: "Round-the-clock emergency assistance", icon: Phone }
-        ]
-      },
-      stats: {
-        title: "Impact We've Made Together",
-        donors: "Registered Donors",
-        units: "Blood Units Collected",
-        lives: "Lives Impacted",
-        requests: "Emergency Requests Fulfilled"
-      },
-      urgent: {
-        title: "Urgent Blood Requests",
-        subtitle: "People need your help right now",
-        viewAll: "View All Requests",
-        noRequests: "No urgent requests at the moment"
-      },
-      stories: {
-        title: "Success Stories",
-        subtitle: "Real stories from our community",
-        readMore: "Read More Stories"
-      },
-      cta: {
-        title: "Ready to Make a Difference?",
-        subtitle: "Join thousands of donors who are saving lives every day",
-        register: "Register as Donor",
-        learn: "Learn More"
-      }
-    },
-    hi: {
-      hero: {
-        title: "मिलकर जिंदगियां बचाएं",
-        subtitle: "रक्तदान करें, आपातकाल में मदद करें",
-        description: "जीवनदाताओं के हमारे समुदाय से जुड़ें। आपका रक्तदान 3 जिंदगियां बचा सकता है। आज किसी के लिए हीरो बनें।",
-        donateBtn: "अभी रक्तदान करें",
-        requestBtn: "आपातकालीन मदद मांगें",
-        emergencyBtn: "🚨 आपातकालीन अलर्ट"
-      },
-      mission: {
-        title: "हमारा मिशन",
-        description: "तत्काल आपातकालीन रक्त सहायता के लिए रक्तदाताओं, प्राप्तकर्ताओं और अस्पतालों को जोड़ने वाला एक सुगम मंच बनाना।",
-        values: [
-          { title: "तेज़ प्रतिक्रिया", desc: "आपातकालीन रक्त अनुरोध मिनटों में संसाधित", icon: Clock },
-          { title: "सत्यापित दाता", desc: "सभी दाता चिकित्सा जांच के साथ सत्यापित हैं", icon: Shield },
-          { title: "सामुदायिक प्रभाव", desc: "समुदायों में जीवनदाताओं का नेटवर्क बनाना", icon: Users },
-          { title: "24/7 सपोर्ट", desc: "चौबीसों घंटे आपातकालीन सहायता", icon: Phone }
-        ]
-      },
-      stats: {
-        title: "हमने मिलकर जो प्रभाव डाला है",
-        donors: "पंजीकृत दाता",
-        units: "रक्त यूनिट एकत्रित",
-        lives: "प्रभावित जीवन",
-        requests: "पूरे किए गए आपातकालीन अनुरोध"
-      },
-      urgent: {
-        title: "तत्काल रक्त अनुरोध",
-        subtitle: "लोगों को अभी आपकी मदद चाहिए",
-        viewAll: "सभी अनुरोध देखें",
-        noRequests: "फिलहाल कोई तत्काल अनुरोध नहीं"
-      },
-      stories: {
-        title: "सफलता की कहानियां",
-        subtitle: "हमारे समुदाय की वास्तविक कहानियां",
-        readMore: "और कहानियां पढ़ें"
-      },
-      cta: {
-        title: "बदलाव लाने के लिए तैयार हैं?",
-        subtitle: "हजारों दाताओं से जुड़ें जो हर दिन जिंदगियां बचा रहे हैं",
-        register: "दाता के रूप में पंजीकरण करें",
-        learn: "और जानें"
-      }
-    }
-  };
-
-  const t = translations[language] || translations.en;
-  
-  // Add icon mapping for mission values
-  const missionValues = t.mission.values.map((value, index) => ({
-    ...value,
-    icon: [Clock, Shield, Users, Phone][index]
-  }));
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-red-600 to-red-800 text-white py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              {user && (
-                <div className="mb-4">
-                  <h3 className="text-2xl font-semibold text-red-100">
-                    {language === 'en' ? `Welcome, ${user.name}!` : `स्वागत है, ${user.name}!`}
-                  </h3>
-                </div>
-              )}
-              <h1 className="text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-                {t.hero.title}
-              </h1>
-              <h2 className="text-2xl lg:text-3xl mb-6 text-red-100">
-                {t.hero.subtitle}
-              </h2>
-              <p className="text-xl mb-8 text-red-100 leading-relaxed">
-                {t.hero.description}
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link to="/register">
-                  <Button size="lg" className="bg-white text-red-600 hover:bg-red-50 text-lg px-8 py-4">
-                    <Heart className="h-5 w-5 mr-2" />
-                    {t.hero.donateBtn}
-                  </Button>
-                </Link>
-                <Link to="/request">
-                  <Button size="lg" className="bg-white text-red-600 hover:bg-red-50 text-lg px-8 py-4">
-                    <Phone className="h-5 w-5 mr-2" />
-                    {t.hero.requestBtn}
-                  </Button>
-                </Link>
-              </div>
+    <div className="min-h-screen bg-white">
 
-              {/* Emergency Button */}
-              <motion.div
-                className="mt-8"
-                animate={{ scale: [1, 1.05, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                <Link to="/request">
-                  <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-8 py-4">
-                    <Bell className="h-5 w-5 mr-2 animate-pulse" />
-                    {t.hero.emergencyBtn}
-                  </Button>
-                </Link>
-              </motion.div>
-            </motion.div>
+      {/* ── HERO ── */}
+      <section className="bg-gradient-to-br from-red-600 to-red-800 text-white py-16 px-4">
+        <div className="max-w-5xl mx-auto text-center">
+          {user && (
+            <p className="text-red-200 text-lg mb-2">
+              Welcome back, <span className="font-bold text-white">{user.name}</span> 👋
+            </p>
+          )}
+          <motion.h1
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-4xl md:text-6xl font-extrabold mb-4 leading-tight"
+          >
+            Someone Needs Blood <br />
+            <span className="text-yellow-300">Right Now.</span>
+          </motion.h1>
+          <p className="text-xl text-red-100 mb-10 max-w-2xl mx-auto">
+            LifeLink connects blood donors with patients in emergency. One donation saves up to 3 lives.
+          </p>
 
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative"
-            >
-              <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8">
-                <div className="grid grid-cols-2 gap-6 text-center">
-                  <div>
-                    <motion.div
-                      className="text-4xl font-bold mb-2"
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: 0.5, type: "spring" }}
-                    >
-                      {stats.totalDonors.toLocaleString()}+
-                    </motion.div>
-                    <div className="text-red-100">{t.stats.donors}</div>
-                  </div>
-                  <div>
-                    <motion.div
-                      className="text-4xl font-bold mb-2"
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: 0.7, type: "spring" }}
-                    >
-                      {stats.bloodUnitsCollected.toLocaleString()}+
-                    </motion.div>
-                    <div className="text-red-100">{t.stats.units}</div>
-                  </div>
-                  <div>
-                    <motion.div
-                      className="text-4xl font-bold mb-2"
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: 0.9, type: "spring" }}
-                    >
-                      {stats.livesImpacted.toLocaleString()}+
-                    </motion.div>
-                    <div className="text-red-100">{t.stats.lives}</div>
-                  </div>
-                  <div>
-                    <motion.div
-                      className="text-4xl font-bold mb-2"
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: 1.1, type: "spring" }}
-                    >
-                      {stats.emergencyRequests.toLocaleString()}+
-                    </motion.div>
-                    <div className="text-red-100">{t.stats.requests}</div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
+          {/* TWO BIG CLEAR BUTTONS */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link to="/register">
+              <Button size="lg" className="bg-white text-red-600 hover:bg-red-50 text-xl font-bold px-10 py-6 rounded-2xl shadow-lg w-full sm:w-auto">
+                <Heart className="h-6 w-6 mr-3" />
+                I Want to Donate Blood
+              </Button>
+            </Link>
+            <Link to="/request">
+              <Button size="lg" className="bg-yellow-400 text-black hover:bg-yellow-300 text-xl font-bold px-10 py-6 rounded-2xl shadow-lg w-full sm:w-auto">
+                <AlertTriangle className="h-6 w-6 mr-3" />
+                I Need Blood Urgently
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Mission Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">{t.mission.title}</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              {t.mission.description}
-            </p>
-          </motion.div>
+      {/* ── HOW IT WORKS ── */}
+      <section className="py-16 px-4 bg-gray-50">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-3xl font-bold text-center text-gray-900 mb-4">How LifeLink Works</h2>
+          <p className="text-center text-gray-500 mb-12">Simple steps — for donors and patients both</p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {missionValues.map((value, index) => (
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* FOR DONORS */}
+            <div className="bg-white rounded-2xl shadow-md p-8 border-t-4 border-red-500">
+              <div className="flex items-center mb-6">
+                <div className="bg-red-100 p-3 rounded-full mr-4">
+                  <Heart className="h-7 w-7 text-red-600" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900">If You Want to Donate</h3>
+              </div>
+              <ol className="space-y-4">
+                {[
+                  { step: '1', text: 'Create a free account' },
+                  { step: '2', text: 'Register your blood group & location' },
+                  { step: '3', text: 'Get notified when someone nearby needs your blood' },
+                  { step: '4', text: 'Call the patient and go donate — save a life!' },
+                ].map(item => (
+                  <li key={item.step} className="flex items-start">
+                    <span className="bg-red-600 text-white text-sm font-bold rounded-full w-7 h-7 flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">
+                      {item.step}
+                    </span>
+                    <span className="text-gray-700 text-lg">{item.text}</span>
+                  </li>
+                ))}
+              </ol>
+              <Link to="/register" className="block mt-8">
+                <Button className="w-full bg-red-600 hover:bg-red-700 text-lg py-3">
+                  Register as Donor
+                </Button>
+              </Link>
+            </div>
+
+            {/* FOR PATIENTS */}
+            <div className="bg-white rounded-2xl shadow-md p-8 border-t-4 border-yellow-400">
+              <div className="flex items-center mb-6">
+                <div className="bg-yellow-100 p-3 rounded-full mr-4">
+                  <AlertTriangle className="h-7 w-7 text-yellow-600" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900">If You Need Blood</h3>
+              </div>
+              <ol className="space-y-4">
+                {[
+                  { step: '1', text: 'Click "I Need Blood Urgently"' },
+                  { step: '2', text: 'Fill in patient name, blood group & hospital' },
+                  { step: '3', text: 'Nearby donors get notified instantly' },
+                  { step: '4', text: 'Donors call you directly — help arrives fast!' },
+                ].map(item => (
+                  <li key={item.step} className="flex items-start">
+                    <span className="bg-yellow-500 text-white text-sm font-bold rounded-full w-7 h-7 flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">
+                      {item.step}
+                    </span>
+                    <span className="text-gray-700 text-lg">{item.text}</span>
+                  </li>
+                ))}
+              </ol>
+              <Link to="/request" className="block mt-8">
+                <Button className="w-full bg-yellow-500 hover:bg-yellow-600 text-black text-lg py-3 font-bold">
+                  Request Blood Now
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── LIVE URGENT REQUESTS ── */}
+      {urgentRequests.length > 0 && (
+        <section className="py-16 px-4 bg-red-50">
+          <div className="max-w-5xl mx-auto">
+            <div className="flex items-center justify-center mb-2">
+              <span className="h-3 w-3 bg-red-500 rounded-full animate-ping mr-2"></span>
+              <h2 className="text-3xl font-bold text-gray-900">Live Blood Requests</h2>
+            </div>
+            <p className="text-center text-gray-500 mb-10">These people need blood right now — can you help?</p>
+
+            <div className="grid md:grid-cols-3 gap-6">
+              {urgentRequests.map((req: any, i: number) => (
+                <motion.div
+                  key={req.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.1 }}
+                  className="bg-white rounded-2xl shadow-md p-6 border-l-4 border-red-500"
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <span className={`${urgencyColor(req.urgencyLevel)} text-white text-xs font-bold px-3 py-1 rounded-full uppercase`}>
+                      {req.urgencyLevel}
+                    </span>
+                    <span className="text-3xl font-extrabold text-red-600">{req.bloodGroup}</span>
+                  </div>
+                  <h4 className="font-bold text-gray-900 text-lg mb-1">{req.patientName}</h4>
+                  <div className="flex items-center text-gray-500 text-sm mb-1">
+                    <MapPin className="h-4 w-4 mr-1" />
+                    {req.hospital}, {req.city}
+                  </div>
+                  <div className="flex items-center text-gray-500 text-sm mb-4">
+                    <Droplets className="h-4 w-4 mr-1" />
+                    {req.unitsNeeded} unit(s) needed
+                  </div>
+                  <a href={`tel:${req.phone}`}>
+                    <Button className="w-full bg-red-600 hover:bg-red-700">
+                      <Phone className="h-4 w-4 mr-2" />
+                      Call Now
+                    </Button>
+                  </a>
+                </motion.div>
+              ))}
+            </div>
+
+            <div className="text-center mt-8">
+              <Link to="/donors">
+                <Button variant="outline" className="border-red-300 text-red-600 hover:bg-red-50 px-8 py-3">
+                  View All Requests & Find Donors
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ── STATS ── */}
+      <section className="py-16 px-4 bg-white">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">Our Community Impact</h2>
+          <div className="grid grid-cols-3 gap-6 text-center">
+            {[
+              { value: stats.donors, label: 'Registered Donors', icon: Users, color: 'text-blue-600' },
+              { value: stats.requests, label: 'Blood Requests', icon: Bell, color: 'text-red-600' },
+              { value: stats.lives, label: 'Lives Impacted', icon: Heart, color: 'text-green-600' },
+            ].map((item, i) => (
               <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                whileHover={{ scale: 1.05 }}
+                key={i}
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ delay: i * 0.1 }}
+                className="bg-gray-50 rounded-2xl p-6"
               >
-                <Card className="text-center h-full border-red-100 hover:border-red-200 transition-colors">
-                  <CardContent className="p-8">
-                    <div className="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <value.icon className="h-8 w-8 text-red-600" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4">{value.title}</h3>
-                    <p className="text-gray-600">{value.desc}</p>
-                  </CardContent>
-                </Card>
+                <item.icon className={`h-8 w-8 ${item.color} mx-auto mb-3`} />
+                <div className={`text-4xl font-extrabold ${item.color} mb-1`}>{item.value}+</div>
+                <div className="text-gray-600 font-medium">{item.label}</div>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Urgent Requests Section */}
-      {urgentRequests.length > 0 && (
-        <section className="py-20 bg-red-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-center mb-12"
-            >
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">{t.urgent.title}</h2>
-              <p className="text-xl text-gray-600 mb-8">{t.urgent.subtitle}</p>
-            </motion.div>
+      {/* ── WHY DONATE ── */}
+      <section className="py-16 px-4 bg-gray-50">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-3xl font-bold text-center text-gray-900 mb-4">Why Donate Blood?</h2>
+          <p className="text-center text-gray-500 mb-12">Every drop counts. Here's why your donation matters.</p>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              {urgentRequests.map((request: any, index) => (
-                <motion.div
-                  key={request.id}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                >
-                  <Card className="border-red-200 hover:border-red-400 transition-colors">
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between mb-4">
-                        <Badge variant="destructive" className="animate-pulse">
-                          URGENT
-                        </Badge>
-                        <span className="text-2xl font-bold text-red-600">
-                          {request.bloodGroup}
-                        </span>
-                      </div>
-                      <h3 className="font-semibold text-gray-900 mb-2">
-                        {request.patientName}
-                      </h3>
-                      <div className="flex items-center text-gray-600 mb-2">
-                        <MapPin className="h-4 w-4 mr-1" />
-                        <span className="text-sm">{request.hospital}</span>
-                      </div>
-                      <div className="flex items-center text-gray-600 mb-4">
-                        <Clock className="h-4 w-4 mr-1" />
-                        <span className="text-sm">
-                          {new Date(request.createdAt).toLocaleDateString()}
-                        </span>
-                      </div>
-                      <p className="text-sm text-gray-600 mb-4">
-                        Units needed: {request.unitsNeeded}
-                      </p>
-                      <Link to={`/request/${request.id}`}>
-                        <Button className="w-full" variant="destructive">
-                          Help Now
-                        </Button>
-                      </Link>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
-
-            <div className="text-center">
-              <Link to="/request">
-                <Button variant="outline" size="lg">
-                  {t.urgent.viewAll}
-                </Button>
-              </Link>
-            </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              {
+                icon: Heart,
+                color: 'bg-red-100 text-red-600',
+                title: 'Save Up to 3 Lives',
+                desc: 'One blood donation can be split into 3 components — red cells, plasma, and platelets — each saving a different life.'
+              },
+              {
+                icon: Clock,
+                color: 'bg-blue-100 text-blue-600',
+                title: 'Takes Only 30 Minutes',
+                desc: 'The actual donation takes just 8–10 minutes. The whole process including registration is under 30 minutes.'
+              },
+              {
+                icon: Shield,
+                color: 'bg-green-100 text-green-600',
+                title: 'Free Health Check',
+                desc: 'Before donating, you get a free mini health check — blood pressure, hemoglobin, pulse, and temperature.'
+              },
+              {
+                icon: Users,
+                color: 'bg-purple-100 text-purple-600',
+                title: 'Anyone Can Need It',
+                desc: 'Accidents, surgeries, cancer treatment, childbirth — blood is needed every 2 seconds in India.'
+              },
+              {
+                icon: CheckCircle,
+                color: 'bg-yellow-100 text-yellow-600',
+                title: 'Safe & Painless',
+                desc: 'Donating blood is completely safe. Your body replenishes the donated blood within 24–48 hours.'
+              },
+              {
+                icon: Bell,
+                color: 'bg-orange-100 text-orange-600',
+                title: 'Priority in Emergency',
+                desc: 'Registered donors on LifeLink get priority access to blood if they or their family ever need it.'
+              },
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.05 }}
+                className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className={`${item.color} w-12 h-12 rounded-full flex items-center justify-center mb-4`}>
+                  <item.icon className="h-6 w-6" />
+                </div>
+                <h3 className="font-bold text-gray-900 text-lg mb-2">{item.title}</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">{item.desc}</p>
+              </motion.div>
+            ))}
           </div>
-        </section>
-      )}
-
-      {/* Success Stories Section */}
-      {successStories.length > 0 && (
-        <section className="py-20 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-center mb-12"
-            >
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">{t.stories.title}</h2>
-              <p className="text-xl text-gray-600">{t.stories.subtitle}</p>
-            </motion.div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-              {successStories.map((story: any, index) => (
-                <motion.div
-                  key={story.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                >
-                  <Card className="h-full border-red-100 hover:border-red-200 transition-colors">
-                    <CardContent className="p-6">
-                      <div className="flex items-center mb-4">
-                        <Award className="h-5 w-5 text-yellow-500 mr-2" />
-                        <span className="font-semibold text-gray-900">{story.donorName}</span>
-                      </div>
-                      <p className="text-gray-600 mb-4 italic">"{story.story}"</p>
-                      <div className="flex items-center text-sm text-gray-500">
-                        <Clock className="h-4 w-4 mr-1" />
-                        {new Date(story.createdAt).toLocaleDateString()}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
-
-            <div className="text-center">
-              <Link to="/feedback">
-                <Button variant="outline" size="lg">
-                  {t.stories.readMore}
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-red-600 to-red-800 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <h2 className="text-4xl font-bold mb-6">{t.cta.title}</h2>
-            <p className="text-xl mb-8 text-red-100 max-w-2xl mx-auto">
-              {t.cta.subtitle}
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/register">
-                <Button size="lg" className="bg-white text-red-600 hover:bg-red-50 text-lg px-8 py-4">
-                  <Heart className="h-5 w-5 mr-2" />
-                  {t.cta.register}
-                </Button>
-              </Link>
-              <Link to="/about">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-red-600 text-lg px-8 py-4">
-                  {t.cta.learn}
-                </Button>
-              </Link>
-            </div>
-          </motion.div>
         </div>
       </section>
+
+      {/* ── BLOOD GROUP COMPATIBILITY ── */}
+      <section className="py-16 px-4 bg-white">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl font-bold text-center text-gray-900 mb-4">Blood Group Compatibility</h2>
+          <p className="text-center text-gray-500 mb-10">Know who you can donate to and receive from</p>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-center border-collapse">
+              <thead>
+                <tr className="bg-red-600 text-white">
+                  <th className="p-3 rounded-tl-lg">Blood Group</th>
+                  <th className="p-3">Can Donate To</th>
+                  <th className="p-3 rounded-tr-lg">Can Receive From</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  { group: 'O-', donateTo: 'Everyone (Universal Donor)', receiveFrom: 'O-' },
+                  { group: 'O+', donateTo: 'O+, A+, B+, AB+', receiveFrom: 'O+, O-' },
+                  { group: 'A-', donateTo: 'A-, A+, AB-, AB+', receiveFrom: 'A-, O-' },
+                  { group: 'A+', donateTo: 'A+, AB+', receiveFrom: 'A+, A-, O+, O-' },
+                  { group: 'B-', donateTo: 'B-, B+, AB-, AB+', receiveFrom: 'B-, O-' },
+                  { group: 'B+', donateTo: 'B+, AB+', receiveFrom: 'B+, B-, O+, O-' },
+                  { group: 'AB-', donateTo: 'AB-, AB+', receiveFrom: 'AB-, A-, B-, O-' },
+                  { group: 'AB+', donateTo: 'AB+ only', receiveFrom: 'Everyone (Universal Receiver)' },
+                ].map((row, i) => (
+                  <tr key={row.group} className={i % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                    <td className="p-3 font-extrabold text-red-600 text-lg">{row.group}</td>
+                    <td className="p-3 text-gray-700">{row.donateTo}</td>
+                    <td className="p-3 text-gray-700">{row.receiveFrom}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FINAL CTA ── */}
+      <section className="py-20 px-4 bg-gradient-to-br from-red-600 to-red-800 text-white text-center">
+        <div className="max-w-3xl mx-auto">
+          <Heart className="h-16 w-16 mx-auto mb-6 animate-pulse" />
+          <h2 className="text-4xl font-extrabold mb-4">Be Someone's Hero Today</h2>
+          <p className="text-xl text-red-100 mb-10">
+            It costs you nothing but 30 minutes. It means everything to someone fighting for their life.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link to={user ? '/register' : '/auth'}>
+              <Button size="lg" className="bg-white text-red-600 hover:bg-red-50 text-xl font-bold px-10 py-6 rounded-2xl w-full sm:w-auto">
+                <Heart className="h-6 w-6 mr-3" />
+                Donate Blood Now
+              </Button>
+            </Link>
+            <Link to="/request">
+              <Button size="lg" className="bg-yellow-400 text-black hover:bg-yellow-300 text-xl font-bold px-10 py-6 rounded-2xl w-full sm:w-auto">
+                <AlertTriangle className="h-6 w-6 mr-3" />
+                Request Blood
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 }
