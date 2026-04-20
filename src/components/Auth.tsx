@@ -473,24 +473,36 @@ export function Auth({ onLogin, language }: AuthProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="mt-8 text-center"
+            className="mt-10 mb-6"
           >
-            <div className="grid grid-cols-3 gap-4 text-sm text-gray-600">
-              <div className="flex flex-col items-center">
-                <Heart className="h-6 w-6 text-red-500 mb-2" />
-                <span>
+            <div className="flex justify-between items-center px-4">
+              <div className="flex flex-col items-center gap-3 flex-1">
+                <div className="bg-red-100 p-3 rounded-full">
+                  <Heart className="h-6 w-6 text-red-500" />
+                </div>
+                <span className="text-sm text-gray-600 font-medium text-center">
                   {language === 'en' ? 'Save Lives' : 'जीवन बचाएं'}
                 </span>
               </div>
-              <div className="flex flex-col items-center">
-                <User className="h-6 w-6 text-red-500 mb-2" />
-                <span>
+
+              <div className="w-px h-12 bg-gray-200" />
+
+              <div className="flex flex-col items-center gap-3 flex-1">
+                <div className="bg-blue-100 p-3 rounded-full">
+                  <User className="h-6 w-6 text-blue-500" />
+                </div>
+                <span className="text-sm text-gray-600 font-medium text-center">
                   {language === 'en' ? 'Join Community' : 'समुदाय में शामिल हों'}
                 </span>
               </div>
-              <div className="flex flex-col items-center">
-                <Lock className="h-6 w-6 text-red-500 mb-2" />
-                <span>
+
+              <div className="w-px h-12 bg-gray-200" />
+
+              <div className="flex flex-col items-center gap-3 flex-1">
+                <div className="bg-green-100 p-3 rounded-full">
+                  <Lock className="h-6 w-6 text-green-500" />
+                </div>
+                <span className="text-sm text-gray-600 font-medium text-center">
                   {language === 'en' ? 'Secure Platform' : 'सुरक्षित मंच'}
                 </span>
               </div>
