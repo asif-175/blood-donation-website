@@ -18,6 +18,7 @@ import { AlertsPage } from './components/AlertsPage';
 import { RealtimeNotifications } from './components/RealtimeNotifications';
 import { Footer } from './components/Footer';
 import { DataMigration } from './components/DataMigration';
+import { LeftSidebar, RightSidebar } from './components/Sidebars';
 import { supabaseService } from './services/supabaseService';
 
 function App() {
@@ -414,35 +415,38 @@ function AppContent() {
         {/* Sticky Emergency Button - visible on all pages except auth */}
         <StickyEmergencyButton />
 
-        {/* Main Content */}
-        <main>
-          <Routes>
-            <Route path="/" element={<Auth language={language} onLogin={handleLogin} />} />
-            <Route path="/home" element={<HomePage language={language} user={user} />} />
-            <Route path="/register" element={<RegisterPage language={language} user={user} />} />
-            <Route path="/request" element={<RequestHelpPage language={language} user={user} />} />
-            <Route path="/donors" element={<MapPage language={language} user={user} />} />
-            <Route path="/about" element={<AboutPage language={language} />} />
-            <Route path="/contact" element={<ContactPage language={language} />} />
-            <Route path="/migrate" element={<DataMigration />} />
-            <Route path="/alerts" element={user ? <AlertsPage language={language} user={user} /> : <Auth language={language} onLogin={handleLogin} />} />
-            <Route path="/feedback" element={<FeedbackPage language={language} user={user} />} />
-            <Route path="/auth" element={<Auth language={language} onLogin={handleLogin} />} />
-            <Route path="/edit-profile" element={user ? <EditProfile user={user} onUpdateUser={handleUpdateUser} language={language} /> : <Auth language={language} onLogin={handleLogin} />} />
-            
-            {user && (
-              <>
-                <Route path="/dashboard" element={<Dashboard language={language} user={user} />} />
-                {user.role === 'admin' && (
-                  <>
-                    <Route path="/admin-welcome" element={<AdminWelcome user={user} />} />
-                    <Route path="/admin" element={<AdminPanel language={language} user={user} />} />
-                  </>
-                )}
-              </>
-            )}
-          </Routes>
-        </main>
+        {/* Main Content — 3 column layout on large screens */}
+        <div className="flex gap-4 px-4 py-4 max-w-screen-2xl mx-auto w-full">
+          <LeftSidebar />
+          <main className="flex-1 min-w-0">
+            <Routes>
+              <Route path="/" element={<Auth language={language} onLogin={handleLogin} />} />
+              <Route path="/home" element={<HomePage language={language} user={user} />} />
+              <Route path="/register" element={<RegisterPage language={language} user={user} />} />
+              <Route path="/request" element={<RequestHelpPage language={language} user={user} />} />
+              <Route path="/donors" element={<MapPage language={language} user={user} />} />
+              <Route path="/about" element={<AboutPage language={language} />} />
+              <Route path="/contact" element={<ContactPage language={language} />} />
+              <Route path="/migrate" element={<DataMigration />} />
+              <Route path="/alerts" element={user ? <AlertsPage language={language} user={user} /> : <Auth language={language} onLogin={handleLogin} />} />
+              <Route path="/feedback" element={<FeedbackPage language={language} user={user} />} />
+              <Route path="/auth" element={<Auth language={language} onLogin={handleLogin} />} />
+              <Route path="/edit-profile" element={user ? <EditProfile user={user} onUpdateUser={handleUpdateUser} language={language} /> : <Auth language={language} onLogin={handleLogin} />} />
+              {user && (
+                <>
+                  <Route path="/dashboard" element={<Dashboard language={language} user={user} />} />
+                  {user.role === 'admin' && (
+                    <>
+                      <Route path="/admin-welcome" element={<AdminWelcome user={user} />} />
+                      <Route path="/admin" element={<AdminPanel language={language} user={user} />} />
+                    </>
+                  )}
+                </>
+              )}
+            </Routes>
+          </main>
+          <RightSidebar />
+        </div>
         
         <Footer />
     </div>
