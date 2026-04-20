@@ -82,7 +82,7 @@ export function LeftSidebar() {
   };
 
   return (
-    <aside className="hidden xl:flex flex-col gap-4 w-56 shrink-0">
+    <aside className="hidden lg:flex flex-col gap-4 w-48 shrink-0">
 
       {/* Tab Toggle */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -183,7 +183,7 @@ export function LeftSidebar() {
 
 export function RightSidebar() {
   return (
-    <aside className="hidden xl:flex flex-col gap-4 w-56 shrink-0">
+    <aside className="hidden lg:flex flex-col gap-4 w-48 shrink-0">
 
       {/* Upcoming Blood Camps */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">

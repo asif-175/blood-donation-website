@@ -416,7 +416,7 @@ function AppContent() {
         <StickyEmergencyButton />
 
         {/* Main Content — 3 column layout on large screens */}
-        <div className="flex gap-4 px-4 py-4 max-w-screen-2xl mx-auto w-full">
+        <div className="flex gap-4 px-2 py-4 max-w-screen-2xl mx-auto w-full">
           <LeftSidebar />
           <main className="flex-1 min-w-0">
             <Routes>
