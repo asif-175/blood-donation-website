@@ -194,7 +194,7 @@ export function Auth({ onLogin, language }: AuthProps) {
             city: profile?.city
           };
           onLogin(userData);
-          navigate('/register');
+          navigate('/home');
         }
       } else {
         // Signup with Supabase or localStorage fallback

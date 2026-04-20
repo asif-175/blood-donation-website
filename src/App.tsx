@@ -81,13 +81,10 @@ function AppContent() {
   const handleLogin = (userData) => {
     setUser(userData);
     localStorage.setItem('user', JSON.stringify(userData));
-    
-    // Redirect based on user role
     if (userData.role === 'admin') {
       navigate('/admin-welcome');
     } else {
-      // Regular users go to register page first to become donors
-      navigate('/register');
+      navigate('/home');
     }
   };
 
